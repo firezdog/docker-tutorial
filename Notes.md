@@ -45,15 +45,42 @@ https://www.youtube.com/watch?v=VlSW-tztsvM
   * docker run -it busybox:1.24 will take us into the container
   * note that each time we do this, we get a new container, so files previously added will not persist
 # Docker Containers: Deep Dive
+## Detached Mode
 * We want to be able to start a container and keep it running in the background
 * use "-d" flag
 * output: long id
+## docker ps
 * we can use "docker ps" to see all the containers running.
 * "docker ps -a" shows all containers that have run
 * "docker run --rm ..." will remove the container when it is done -- doesn't appear under "docker ps -a" either
-* docker run --name: let's us give a name to the container being run (otherwise it is auto-generated)
-* docker inspect \<id>: low-level info -- e.g. image-id and log path
-## Detached Mode
-## docker ps
 ## Set Docker Container Name
+* docker run --name: let's us give a name to the container being run (otherwise it is auto-generated)
 ## Docker Inspect Command
+* docker inspect \<id>: low-level info -- e.g. image-id and log path
+# Docker Port Mapping and Docker Logs
+* use Tomcat image -- Tomcat executes java servlets
+* -p host-port:container-port option specifies the port Tomcat server opens on.
+* run command "docker run -it -p 8888:8080 tomcat:8.0 (note the order in which commands are typed does matter)
+* running in detached mode won't put a bunch of junk in the console
+* docker logs command + name gives us the logs of the running container
+# Docker Image Layers
+* docker image is composed of a stack of read-only layers
+  * e.g. base image <= image <= image <= container
+  * docker history \<image> gives the layers
+* new containers created writeable layer on top of stack -- changes will be added to this layer.
+* each layer is like a modification to the original image
+* deleting a container also means deleting this writeable layer, leaving the image intact
+* writeable layers allow multiple layers to be created from one image.
+# Building Docker Images
+* Two methods
+  1. Commit changes in a container (commit the writeable layer to the image)
+  2. Write a Dockerfile
+* We will
+  1. spin up container from base image (debian)
+  2. install git package
+  3. commit changes in container to build a new image
+* What I did
+  * docker run -it debian (gets the latest debian)
+  * in debian, apt-update, apt-get install (-y) git
+  * docker commit \<container_id> \<repo/image:tag>
+* we can then spin up containers based on the committed image
