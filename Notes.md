@@ -84,3 +84,35 @@ https://www.youtube.com/watch?v=VlSW-tztsvM
   * in debian, apt-update, apt-get install (-y) git
   * docker commit \<container_id> \<repo/image:tag>
 * we can then spin up containers based on the committed image
+# Writing Docker Files (51:45)
+* text file containing instructions that assemble an image
+* 1 instruction = 1 image layer
+* Called "Dockerfile"
+* Written line by line
+* FROM -- base image (note, docker instructions even images have autocomplete!)
+* RUN + /<command>
+* to build docker image, we use "docker build -t /<image-tag> /<build-context>
+  * arg to build context (copying source code to docker container) (but we find Dockerfile by default in context, otherwise -f)
+* docker daemon runs each construction inside a different container, then removes it (layering on the image) -- each container is ephemeral and then committed to image as instructions are run
+# Docker Images In Depth (59:30)
+* Chaining RUNs
+  * Each run command adds a new image layer -- chaining reduces layers
+  * use && instead of RUN
+  * sort multi-line args alphabetically (avoid duplication, easier update)
+* Cleanup note: 
+  * "docker rmi $(docker images -q) --force" 
+  * "docker rm $(docker ps -a -q)"
+* CMD Instructions
+  * What does the container do when it starts?  Default command is for example "bash"
+  * exec (preferred) or shell
+    * ["echo", "hello world"]
+  * we can over-write the default command
+* Docker Cache
+  * Docker build re-uses existing layers if instructions don't change ("using cache")
+  * (If we have a new tag, we get a new container, but the existing layer is still used)
+  * Aggressive caching
+    * If we change "apt-get install ..." after "apt-get update", only the changed instruction executes -- but that means we may have an outdated apt-get registry
+    * To avoid this, we chain
+  * invalidate the cache --no-cache=true
+  * COPY: copies files from build context into the container
+  * ADD: lets you download and copy files from internet (as well as unpacking compressed files) -- but COPY is considered more transparent (stripped down ADD)
