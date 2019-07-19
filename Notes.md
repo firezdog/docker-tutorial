@@ -116,3 +116,4 @@ https://www.youtube.com/watch?v=VlSW-tztsvM
   * invalidate the cache --no-cache=true
   * COPY: copies files from build context into the container
   * ADD: lets you download and copy files from internet (as well as unpacking compressed files) -- but COPY is considered more transparent (stripped down ADD)
+# Pushing Images to Docker Hub (1:07)
