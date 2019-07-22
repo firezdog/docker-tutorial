@@ -117,3 +117,9 @@ https://www.youtube.com/watch?v=VlSW-tztsvM
   * COPY: copies files from build context into the container
   * ADD: lets you download and copy files from internet (as well as unpacking compressed files) -- but COPY is considered more transparent (stripped down ADD)
 # Pushing Images to Docker Hub (1:07)
+* Log in to dockerhub
+* associate image with dockerhub account -- rename image to "/<dockerhubid>/reponame"
+* docker tag -- rename a docker image.
+  * avoid using the default "latest" tag -- "latest" is only a convention and there is no special behavior associated with it -- better to version tags every time.
+  * docker tag /<image id> /<username>/riverrun:1.0
+* docker login; docker push /<image name>
